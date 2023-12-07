@@ -57,26 +57,6 @@ namespace C3_Windows_App
             }
             Helpers.Pause();
         }
-        private void GambleInput(string userInput)
-        {
-            switch (userInput)
-            {
-                case "1":
-                    
-                    break;
-                case "2":
-
-                    break;
-                case "3":
-
-                    break;
-                default:
-                    Console.WriteLine("Incorrect choice...");
-                    // Invalid input
-                    break;
-            }
-            Helpers.Pause();
-        }
         private string ShowLoginMenu()
         {
             Console.Clear();
