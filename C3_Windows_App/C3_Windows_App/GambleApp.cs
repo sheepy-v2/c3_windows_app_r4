@@ -36,6 +36,7 @@ namespace C3_Windows_App
                     Login();
                     break;
                 case "2":
+                    Register();
                     break;
                 default:
                     Console.WriteLine("Incorrect choice...");
@@ -44,31 +45,11 @@ namespace C3_Windows_App
             }
             Helpers.Pause();
         }
-
-
-        private void RegisterUserInput(string userInput)
-        {
-            Console.Clear();
-            Console.WriteLine("Registreer een nieuw account");
-
-            string name = Helpers.Ask("Geef je naam op");
-            string email = Helpers.Ask("Geef je email op");
-            string password = Helpers.Ask("Geef je wachtwoord op");
-            int balance = 50;
-            string remember_token = Helpers.Ask("Geef je remember token op");
-
-            User newUser = new User(name, email, password, remember_token);
-
-            WindowsAppDataContext.users.Add(newUser);
-            WindowsAppDataContext.SaveChanges();
-
-
-            Console.WriteLine("Registration successful! Press <ENTER> to continue.");
-
-        }
-
         private string ShowLoginMenu()
         {
+
+
+
             Console.Clear();
             Console.WriteLine("1. login");
             Console.WriteLine("2. registreer een nieuw account");
@@ -108,6 +89,23 @@ namespace C3_Windows_App
                 }
             }
             Console.WriteLine("dit account bestaat niet");
+        }
+
+        private void Register()
+        {
+            int balance = 50;
+
+            Console.Clear();
+            Console.WriteLine("Registreer een nieuw account");
+            string name = Helpers.Ask("Geef je naam op");
+            string email = Helpers.Ask("Geef je email op");
+            string password = Helpers.Ask("Geef je wachtwoord op");
+            
+
+            User newUser = new User(name, email, password);
+            WindowsAppDataContext.Users.Add(newUser);
+            WindowsAppDataContext.SaveChanges();
+            Console.WriteLine("Registration successful! Press <ENTER> to continue.");
         }
     }
 }
