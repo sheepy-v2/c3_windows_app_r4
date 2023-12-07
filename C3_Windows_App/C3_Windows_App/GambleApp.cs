@@ -44,6 +44,29 @@ namespace C3_Windows_App
             }
             Helpers.Pause();
         }
+
+
+        private void RegisterUserInput(string userInput)
+        {
+            Console.Clear();
+            Console.WriteLine("Registreer een nieuw account");
+
+            string name = Helpers.Ask("Geef je naam op");
+            string email = Helpers.Ask("Geef je email op");
+            string password = Helpers.Ask("Geef je wachtwoord op");
+            int balance = 50;
+            string remember_token = Helpers.Ask("Geef je remember token op");
+
+            User newUser = new User(name, email, password, remember_token);
+
+            WindowsAppDataContext.users.Add(newUser);
+            WindowsAppDataContext.SaveChanges();
+
+
+            Console.WriteLine("Registration successful! Press <ENTER> to continue.");
+
+        }
+
         private string ShowLoginMenu()
         {
             Console.Clear();
