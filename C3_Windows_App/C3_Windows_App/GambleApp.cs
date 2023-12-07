@@ -12,6 +12,7 @@ namespace C3_Windows_App
     {
         WindowsAppDataContext WindowsAppDataContext;
         User currentUser;
+        private string State;
 
         public GambleApp()
         {
@@ -20,12 +21,24 @@ namespace C3_Windows_App
 
         internal void run()
         {
+            State = "login";
             string userInput = "";
 
             while (userInput.ToLower() != "x")
             {
-                userInput = ShowLoginMenu();
-                LoginUserInput(userInput);
+                switch (State)
+                {
+                    case "login":
+                        userInput = ShowLoginMenu();
+                        LoginUserInput(userInput);
+                        break;
+                    case "gamble":
+                        userInput = ShowGambleMenu();
+                        GambleInput(userInput);
+                        break;
+                }
+
+                
             }
         }
         private void LoginUserInput(string userInput)
@@ -36,6 +49,26 @@ namespace C3_Windows_App
                     Login();
                     break;
                 case "2":
+                    break;
+                default:
+                    Console.WriteLine("Incorrect choice...");
+                    // Invalid input
+                    break;
+            }
+            Helpers.Pause();
+        }
+        private void GambleInput(string userInput)
+        {
+            switch (userInput)
+            {
+                case "1":
+                    
+                    break;
+                case "2":
+
+                    break;
+                case "3":
+
                     break;
                 default:
                     Console.WriteLine("Incorrect choice...");
@@ -59,7 +92,8 @@ namespace C3_Windows_App
         {
             Console.Clear();
             Console.WriteLine("1. zie de opkomende wedstrijden");
-            Console.WriteLine("2. ");
+            Console.WriteLine("2. wed op een wedstrijd");
+            Console.WriteLine("3. check uw balans");
 
             Console.WriteLine("X. Exit");
 
@@ -80,7 +114,8 @@ namespace C3_Windows_App
                 {
                     currentUser = user;
                     Console.WriteLine($"{user.Name} u bent ingelogd");
-                    
+
+                    State = "gamble";
                     return;
                 }
             }
