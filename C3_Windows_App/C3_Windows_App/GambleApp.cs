@@ -112,14 +112,30 @@ namespace C3_Windows_App
             Console.WriteLine("uw wachtwoord:");
             string passInput = Console.ReadLine();
 
-            foreach(User user in WindowsAppDataContext.Users )
+            foreach (User user in WindowsAppDataContext.Users)
             {
                 if (user.Email == emailInput && user.Password == passInput)
                 {
                     currentUser = user;
-                    Console.WriteLine($"{user.Name} u bent ingelogd");
 
-                    State = "gamble";
+                    // Check if the user is an Admin
+                    if (user.Rank == "Admin")
+                    {
+                        Console.WriteLine($"{user.Name} u bent ingelogd als Admin. Welkom!");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{user.Name} u bent ingelogd");
+                    }
+
+                    if (user.Rank == "Admin")
+                    {
+                        Console.WriteLine("Show admin menu");
+                    }
+                    else
+                    {
+                       State = "gamble";
+                    }
                     return;
                 }
             }
@@ -130,6 +146,8 @@ namespace C3_Windows_App
         {
             int balance = 50;
 
+            string rank = "Gambler";
+
             Console.Clear();
             Console.WriteLine("Registreer een nieuw account");
             string name = Helpers.Ask("Geef je naam op");
@@ -137,7 +155,7 @@ namespace C3_Windows_App
             string password = Helpers.Ask("Geef je wachtwoord op");
             
 
-            User newUser = new User(name, email, password);
+            User newUser = new User(name, email, password, balance, rank);
             WindowsAppDataContext.Users.Add(newUser);
             WindowsAppDataContext.SaveChanges();
             Console.WriteLine("Registration successful! Press <ENTER> to continue.");

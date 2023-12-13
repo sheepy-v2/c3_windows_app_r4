@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C3_Windows_App.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,10 @@ namespace C3_Windows_App
         static public void Main(String[] args)
         { 
             GambleApp app = new GambleApp();
+
+            Userdata user = new Userdata();
+
+
             app.run();
         }
     }
