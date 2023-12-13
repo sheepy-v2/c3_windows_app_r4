@@ -21,7 +21,7 @@ namespace C3_Windows_App.Data
                 "port=3306;" +                            // Server port
                 "user=root;" +                     // Username
                 "password=;" +                 // Password
-                "database=Schoolvoetbal;"       // Database name
+                "database=windows_app;"       // Database name
                 , Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.21-mysql") // Version
                 );
         }
