@@ -130,7 +130,7 @@ namespace C3_Windows_App
 
                     if (user.Rank == "Admin")
                     {
-                        Console.WriteLine("Show admin menu");
+                        ShowAdminMenu();
                     }
                     else
                     {
@@ -140,6 +140,78 @@ namespace C3_Windows_App
                 }
             }
             Console.WriteLine("dit account bestaat niet");
+        }
+
+        private async void ShowAdminMenu()
+        {
+            string adminInput = "";
+            while (adminInput.ToLower() != "x")
+            {
+                Console.Clear();
+                Console.WriteLine("1. Voeg een nieuwe wedstrijd toe");
+                Console.WriteLine("2. Bewerk een bestaande wedstrijd");
+                Console.WriteLine("3. Verwijder een wedstrijd");
+                Console.WriteLine("4. Haal gegevens op van API"); // New option for API data
+
+                Console.WriteLine("X. Exit");
+
+                adminInput = Helpers.Ask("Make your choice and press <ENTER>.");
+
+                switch (adminInput)
+                {
+                    case "1":
+                        // Logic for adding a new match
+                        break;
+                    case "2":
+                        // Logic for editing an existing match
+                        break;
+                    case "3":
+                        // Logic for removing a match
+                        break;
+                    case "4":
+                        // Logic for fetching data from API
+                        await FetchDataFromApi();
+                        break;
+                    default:
+                        Console.WriteLine("Incorrect choice...");
+                        // Invalid input
+                        break;
+                }
+
+                Helpers.Pause();
+            }
+        }
+
+        
+        private async Task FetchDataFromApi()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    // Replace "YOUR_API_ENDPOINT" with the actual API endpoint you want to query
+                    string apiEndpoint = "https://fifa.amo.rocks/api/matches.php?key=ja17";
+
+                    HttpResponseMessage response = await client.GetAsync(apiEndpoint);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string apiData = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Data from API:");
+                        Console.WriteLine(apiData);
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to fetch data from API. Status code: {response.StatusCode}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error fetching data from API: {ex.Message}");
+                }
+            }
+            
         }
 
         private void Register()
