@@ -150,10 +150,10 @@ namespace C3_Windows_App
             while (adminInput.ToLower() != "x")
             {
                 Console.Clear();
-                Console.WriteLine("1. Voeg een nieuwe wedstrijd toe"); // voegt een nieuwe wedstrijd toe aan de database
-                Console.WriteLine("2. Bewerk een bestaande wedstrijd"); // bewerkt een bestaande wedstrijd in de database
-                Console.WriteLine("3. Verwijder een wedstrijd"); // verwijdert een wedstrijd uit de database
-                Console.WriteLine("4. Haal gegevens op van API"); // haalt gegevens op van de API
+                Console.WriteLine("1. uitloggen");
+                Console.WriteLine("2. Uitbetalen"); 
+                Console.WriteLine("3. Laad resultaten");
+                Console.WriteLine("4. Laad wedstrijden");
 
                 Console.WriteLine("X. Exit"); // sluit de applicatie af
 
@@ -162,16 +162,18 @@ namespace C3_Windows_App
                 switch (adminInput)
                 {
                     case "1":
-                        // Logic for adding a new match
-                        break;
+                        State = "login";
+                        Console.WriteLine("U bent uitgelogd");
+                        return;
+                        
                     case "2":
-                        // Logic for editing an existing match
+                       
                         break;
                     case "3":
-                        // Logic for removing a match
+                        
                         break;
                     case "4":
-                        // Logic for fetching data from API
+                        
                         await FetchDataFromApi();
                         break;
                     default:
