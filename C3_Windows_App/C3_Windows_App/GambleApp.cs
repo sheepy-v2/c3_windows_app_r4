@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace C3_Windows_App
 {
@@ -148,12 +150,12 @@ namespace C3_Windows_App
             while (adminInput.ToLower() != "x")
             {
                 Console.Clear();
-                Console.WriteLine("1. Voeg een nieuwe wedstrijd toe");
-                Console.WriteLine("2. Bewerk een bestaande wedstrijd");
-                Console.WriteLine("3. Verwijder een wedstrijd");
-                Console.WriteLine("4. Haal gegevens op van API"); // New option for API data
+                Console.WriteLine("1. Voeg een nieuwe wedstrijd toe"); // voegt een nieuwe wedstrijd toe aan de database
+                Console.WriteLine("2. Bewerk een bestaande wedstrijd"); // bewerkt een bestaande wedstrijd in de database
+                Console.WriteLine("3. Verwijder een wedstrijd"); // verwijdert een wedstrijd uit de database
+                Console.WriteLine("4. Haal gegevens op van API"); // haalt gegevens op van de API
 
-                Console.WriteLine("X. Exit");
+                Console.WriteLine("X. Exit"); // sluit de applicatie af
 
                 adminInput = Helpers.Ask("Make your choice and press <ENTER>.");
 
@@ -182,7 +184,7 @@ namespace C3_Windows_App
             }
         }
 
-        
+
         private async Task FetchDataFromApi()
         {
             using (HttpClient client = new HttpClient())
@@ -190,7 +192,7 @@ namespace C3_Windows_App
                 try
                 {
                     // Replace "YOUR_API_ENDPOINT" with the actual API endpoint you want to query
-                    string apiEndpoint = "https://fifa.amo.rocks/api/matches.php?key=ja17";
+                    string apiEndpoint = "https://fifa.amo.rocks/api/results.php?key=ja17";
 
                     HttpResponseMessage response = await client.GetAsync(apiEndpoint);
 
@@ -198,8 +200,11 @@ namespace C3_Windows_App
                     {
                         string apiData = await response.Content.ReadAsStringAsync();
                         Console.WriteLine("Data from API:");
-                        Console.WriteLine(apiData);
-                        
+
+                        // Parse JSON string and format it
+                        var formattedJson = JToken.Parse(apiData).ToString(Formatting.Indented);
+
+                        Console.WriteLine(formattedJson);
                     }
                     else
                     {
@@ -211,7 +216,6 @@ namespace C3_Windows_App
                     Console.WriteLine($"Error fetching data from API: {ex.Message}");
                 }
             }
-            
         }
 
         private void Register()
