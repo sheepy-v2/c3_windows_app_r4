@@ -2,8 +2,10 @@
 using C3_Windows_App.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,19 +15,22 @@ namespace C3_Windows_App
     internal class GambleApp
     {
         WindowsAppDataContext WindowsAppDataContext;
+        FootballGameData FootballGameData;
+        List<FootballGame> matches;
         User currentUser;
         private string State;
 
         public GambleApp()
         {
             WindowsAppDataContext = new WindowsAppDataContext();
+            FootballGameData = new FootballGameData();
         }
 
         internal void run()
         {
             State = "login";
             string userInput = "";
-
+            
             while (userInput.ToLower() != "x")
             {
                 switch (State)
@@ -65,13 +70,10 @@ namespace C3_Windows_App
             switch (userInput)
             {
                 case "1":
-                    
+                    ShowAllMatches();
                     break;
                 case "2":
-
-                    break;
-                case "3":
-
+                    CheckBalance();
                     break;
                 default:
                     Console.WriteLine("Incorrect choice...");
@@ -98,8 +100,7 @@ namespace C3_Windows_App
         {
             Console.Clear();
             Console.WriteLine("1. zie de opkomende wedstrijden");
-            Console.WriteLine("2. wed op een wedstrijd");
-            Console.WriteLine("3. check uw balans");
+            Console.WriteLine("2. check uw balans");
 
             Console.WriteLine("X. Exit");
 
@@ -114,7 +115,8 @@ namespace C3_Windows_App
             Console.WriteLine("uw wachtwoord:");
             string passInput = Console.ReadLine();
 
-            foreach (User user in WindowsAppDataContext.Users)
+            
+            foreach(User user in WindowsAppDataContext.Users )
             {
                 if (user.Email == emailInput && user.Password == passInput)
                 {
@@ -141,6 +143,7 @@ namespace C3_Windows_App
                     return;
                 }
             }
+           
             Console.WriteLine("dit account bestaat niet");
         }
 
@@ -237,6 +240,84 @@ namespace C3_Windows_App
             WindowsAppDataContext.Users.Add(newUser);
             WindowsAppDataContext.SaveChanges();
             Console.WriteLine("Registration successful! Press <ENTER> to continue.");
+        }
+        private void ShowAllMatches()
+        {
+            Console.Clear();
+
+            Console.WriteLine("================ All MATCHES ================\n");
+            if (FootballGameData.GetMatchList().Count > 0)
+            {
+                matches = FootballGameData.GetMatchList();
+                foreach(FootballGame Match in matches)
+                {
+                    Console.WriteLine($"{Match.Id} | {Match.Team1_Name} vs {Match.Team2_Name}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("there are no matches in matchList");
+            }
+            string Bool = Helpers.Ask("Do you want to gamble on a match? (y/n)");
+            if (Bool == "y" || Bool == "Y")
+            {
+                int match_id = Helpers.AskForInt("Which game would you like to gamble on?");
+                Gamble(match_id);
+            }
+            else if (Bool == "n" || Bool == "N")
+            {
+                return;
+            }
+            else
+            {
+                Console.WriteLine("please enter a valid value");
+                return;
+            }
+            
+        }
+
+
+        private void Gamble(int match_id)
+        {
+            foreach(FootballGame Match in matches)
+            {
+                if(Match.Id == match_id)
+                {
+                    Console.WriteLine($"{Match.Team1_Id} | {Match.Team1_Name}");
+                    Console.WriteLine($"{Match.Team2_Id} | {Match.Team2_Name}");
+                    int teamId = Helpers.AskForInt($"on which team would u like to gamble to win (type it's Id)");
+                    int amountSpent = Helpers.AskForInt("how much would u like to gamble on this team?");
+                    string Bool = Helpers.Ask("are u sure? (y/n)");
+                    if (Bool == "y" || Bool == "Y") 
+                    {
+                        foreach(User user in WindowsAppDataContext.Users)
+                        {
+                            if(user.Id == currentUser.Id)
+                            {
+                                user.Balance -= amountSpent;
+                                
+                            }
+                        }
+                        WindowsAppDataContext.SaveChanges();
+                        Console.WriteLine("Gamble succesfully came through");
+                    }
+                    else if (Bool == "n" || Bool == "N")
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("please enter a valid value");
+                        return;
+                    }
+                }
+            }
+            
+        }
+        private void CheckBalance()
+        {
+            Console.Clear();
+            Console.WriteLine($"Uw balans: {currentUser.Balance}");
         }
     }
 }
