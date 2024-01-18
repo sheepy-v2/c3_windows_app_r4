@@ -17,10 +17,14 @@ namespace C3_Windows_App.Model.Gamble_seperate
         public Gamble_Screen(GambleApp gambleapp)
         {
             gambleApp = gambleapp;
+            Start(); 
+        }
+
+        private void Start()
+        {
             ShowGambleMenu();
             GambleInput();
         }
-
         private void GambleInput()
         {
             switch (gambleApp.GetInput())
@@ -33,6 +37,9 @@ namespace C3_Windows_App.Model.Gamble_seperate
                     break;
                 case "3":
                     checkMatchresults();
+                    break;
+                case "4":
+                    Logout();
                     break;
                 default:
                     Console.WriteLine("Incorrect choice...");
@@ -48,10 +55,10 @@ namespace C3_Windows_App.Model.Gamble_seperate
             Console.WriteLine("1. zie de opkomende wedstrijden");
             Console.WriteLine("2. check uw balans");
             Console.WriteLine("3. zie resultaten van de wedstrijden");
-
+            Console.WriteLine("4. uitloggen");
             Console.WriteLine("X. Exit");
 
-            gambleApp.SetState(Helpers.Ask("Make your choice and press <ENTER>."));
+            gambleApp.SetInput(Helpers.Ask("Make your choice and press <ENTER>."));
         }
 
 
@@ -106,16 +113,13 @@ namespace C3_Windows_App.Model.Gamble_seperate
                     string Bool = Helpers.Ask("are u sure? (y/n)");
                     if (Bool == "y" || Bool == "Y")
                     {
-                        foreach (User user in gambleApp.GetDataContext().Users)
-                        {
-                            if (user.Id == gambleApp.GetUser().Id)
-                            {
-                                user.Balance -= amountSpent;
+                        gambleApp.GetUser().Balance -= amountSpent;
 
-                            }
-                        }
+                        gambleApp.GetDataContext().Bets.Add(new Bet(gambleApp.GetUser().Id, match_id, teamId, amountSpent, false));
                         gambleApp.GetDataContext().SaveChanges();
+
                         Console.WriteLine("Gamble succesfully came through");
+                        
                     }
                     else if (Bool == "n" || Bool == "N")
                     {
@@ -145,6 +149,10 @@ namespace C3_Windows_App.Model.Gamble_seperate
                 Console.WriteLine($"{result.Team1_Name} | {result.Team1_Score} : {result.Team2_Score} | {result.Team2_Name}");
             }
 
+        }
+        private void Logout()
+        {
+            gambleApp.SetState("login");
         }
     }
 }

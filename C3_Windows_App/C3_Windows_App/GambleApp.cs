@@ -63,7 +63,7 @@ namespace C3_Windows_App
                 currentUser = loginScreen.GetCurrentUser();
                 
             }
-            Console.WriteLine("...Program Ended...");
+
         }
         
         

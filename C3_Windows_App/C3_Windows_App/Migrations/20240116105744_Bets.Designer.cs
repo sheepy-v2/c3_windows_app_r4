@@ -2,6 +2,7 @@
 using C3_Windows_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C3_Windows_App.Migrations
 {
     [DbContext(typeof(WindowsAppDataContext))]
-    partial class WindowsAppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240116105744_Bets")]
+    partial class Bets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -4,6 +4,7 @@ namespace C3_Windows_App.Model.Gamble_seperate
 {
     internal class Login_Screen
     {
+        User User = null;
         User currentUser;
         GambleApp gambleApp;
         private bool istrue = false;
@@ -26,7 +27,7 @@ namespace C3_Windows_App.Model.Gamble_seperate
 
             Console.WriteLine("X. Exit");
 
-            gambleApp.SetState(Helpers.Ask("Make your choice and press <ENTER>."));
+            gambleApp.SetInput(Helpers.Ask("Make your choice and press <ENTER>."));
 
         }
 
@@ -52,9 +53,9 @@ namespace C3_Windows_App.Model.Gamble_seperate
         {
             istrue = true;
             string emailInput;
-            bool emailcheck = false;
-            bool passcheck = false;
-            User User = null;
+            bool emailCheck = false;
+            bool passCheck = false;
+            
             Console.Clear();
             while (istrue)
             {
@@ -64,75 +65,63 @@ namespace C3_Windows_App.Model.Gamble_seperate
                 {
                     if (user.Email == emailInput)
                     {
-                        emailcheck = true;
+                        emailCheck = true;
                         error = "";
-                        istrue = false;
+
+                        string passInput = Helpers.Ask("uw wachtwoord:");
+                        if (user.Password == passInput)
+                        {
+                            passCheck = true;
+                            User = user;
+                            error = "";
+                            
+                            currentUser = User;
+
+                            // Check if the user is an Admin
+                            if (currentUser.Rank == "Admin")
+                            {
+                                Console.WriteLine($"{currentUser.Name} u bent ingelogd als Admin. Welkom!");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"{currentUser.Name} u bent ingelogd");
+                            }
+
+                            if (currentUser.Rank == "Admin")
+                            {
+                                gambleApp.SetState("admin");
+                            }
+                            else
+                            {
+                                gambleApp.SetState("gamble");
+                            }
+                            istrue = false;
+                        }
+                        else if (!passCheck)
+                        {
+                            error = "dit is niet het correcte wachtwoord";
+
+                        }
+
 
                     }
-                    else
+                    else if (!emailCheck)
                     {
                         error = "er is geen geregisteerd account met deze email";
-
                     }
                 }
+
                 if (error != "")
                 {
                     Console.WriteLine(error);
                 }
             }
-            istrue = true;
-            while (istrue)
-            {
-                Console.WriteLine("uw wachtwoord:");
-                string passInput = Console.ReadLine();
-
-                foreach (User user in gambleApp.GetDataContext().Users)
-                {
-                    if (user.Password == passInput && emailcheck == true)
-                    {
-                        passcheck = true;
-                        User = user;
-                        error = "";
-                        istrue = false;
-
-                    }
-                    else
-                    {
-                        error = "dit is niet het correcte wachtwoord";
-
-                    }
-                }
-                if (error != "")
-                {
-                    Console.WriteLine(error);
-                }
-
-
-            }
-            if (emailcheck == true && passcheck == true)
-            {
-                currentUser = User;
-
-                // Check if the user is an Admin
-                if (currentUser.Rank == "Admin")
-                {
-                    Console.WriteLine($"{currentUser.Name} u bent ingelogd als Admin. Welkom!");
-                }
-                else
-                {
-                    Console.WriteLine($"{currentUser.Name} u bent ingelogd");
-                }
-
-                if (currentUser.Rank == "Admin")
-                {
-                    gambleApp.SetState("admin");
-                }
-                else
-                {
-                    gambleApp.SetState("gamble");
-                }
-                return;
-            }
+            
+            
+            
+            
+                
+            
         }
 
         private void Register()
@@ -151,7 +140,7 @@ namespace C3_Windows_App.Model.Gamble_seperate
             User newUser = new User(name, email, password, balance, rank);
             gambleApp.GetDataContext().Users.Add(newUser);
             gambleApp.GetDataContext().SaveChanges();
-            Console.WriteLine("Registration successful! Press <ENTER> to continue.");
+            Console.WriteLine("Registration successful!");
         }
 
         public User GetCurrentUser()

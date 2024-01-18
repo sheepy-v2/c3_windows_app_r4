@@ -13,6 +13,7 @@ namespace C3_Windows_App.Data
     internal class WindowsAppDataContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Bet> Bets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
